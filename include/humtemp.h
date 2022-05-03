@@ -1,0 +1,2 @@
+void dhtSetup();
+void readDHT();
