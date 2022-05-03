@@ -5,9 +5,13 @@
 #include "ultraSound.h"
 
 void setup() {
-  setupUltraSound(D6, D7);
+  // setupBlink(LED_BUILTIN);
+  setupDHT();
+  // setupUltraSound(D6, D7);
 }
 
 void loop() {
-  readDistance();
+  // blinkHz():
+  readDHT();
+  // readDistance();
 }
