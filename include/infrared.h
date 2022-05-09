@@ -1,0 +1,2 @@
+void IRSetup();
+void readIR();
