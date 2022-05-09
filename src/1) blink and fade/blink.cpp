@@ -15,17 +15,10 @@ void blink(unsigned long intervall) {
   delay(intervall);
 }
 
-void blink_hz(float hz) {
-  digitalWrite(led, HIGH);
-  delay((int)(1000 / hz));
-  digitalWrite(led, LOW);
-  delay((int)(1000 / hz));
+void blinkHz(float hz) {
+  blink((int)(1000 / hz / 2));
 }
 
-void blink_random(unsigned int lower, unsigned int higher) {
-  const unsigned long rand_delay = rand() % higher + lower;
-  digitalWrite(led, HIGH);
-  delay(rand_delay);
-  digitalWrite(led, LOW);
-  delay(rand_delay);
+void blinkRandom(unsigned int lower, unsigned int higher) {
+  blink(rand() % higher + lower);
 }
