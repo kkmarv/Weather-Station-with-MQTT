@@ -8,7 +8,7 @@ void IRSetup() {
   pinMode(IRPIN, INPUT);
   for (size_t i = 0; i < 18; i++) {
     Serial.printf("\n");
-    Serial.printf("Calibrating... (%d)", seconds);
+    Serial.printf("Calibrating... (%ds)", seconds);
     seconds -= 5;
     delay(5000);
   }
