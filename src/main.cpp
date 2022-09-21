@@ -1,19 +1,23 @@
 #include <Arduino.h>
 
-// #include "blink.h"
-// #include "buzz.h"
-// #include "humtemp.h"
-#include "infrared.h"
-// #include "ultraSound.h"
+#include "air_quality.h"
+#include "find_i2c_address.h"
+#include "humidity_temperature.h"
+#include "pressure_altitude.h"
+#include "rain_sensor.h"
 
 void setup() {
-  // setupDHT()
-  // setupUltraSound(D6, D7);
-  IRSetup();
+  // setupDHT();
+  // setupAir();
+  // setupPressureAltitude();
+  // setup_i2c();
+  setupRainSensor();
 }
 
 void loop() {
-  // readDHT
-  // readDistance();
-  readIR();
+  // readDHT();
+  // readAir();
+  // readPressureAltitude();
+  // loop_i2c();
+  loopRainSensor();
 }

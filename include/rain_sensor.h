@@ -1,0 +1,2 @@
+void setupRainSensor();
+void loopRainSensor();
