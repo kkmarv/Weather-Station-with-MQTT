@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DEBUG_H
+#define DEBUG_H
+
 #ifndef DEBUG
 
 // Begin Serial transmission and wait until its ports are open.
@@ -18,10 +20,10 @@
 #else
 
 #define SETUP_SERIAL(baud) \
-  Serial.begin(baud);  \
-  while (!Serial)      \
-    ;                  \
-  Serial.println();    \
+  Serial.begin(baud);      \
+  while (!Serial)          \
+    ;                      \
+  Serial.println();        \
   Serial.println()
 
 #define LOG(printable) Serial.print(printable)
@@ -84,3 +86,4 @@
   }
 
 #endif  // DEBUG
+#endif  // DEBUG_H

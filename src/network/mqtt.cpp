@@ -1,6 +1,8 @@
 #include <ArduinoMqttClient.h>
 #include <ESP8266WiFi.h>
 
+#include "network.h"
+
 const String userName = MQTT_USER;
 const String userPass = MQTT_PASS;
 const String broker = MQTT_BROK;

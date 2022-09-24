@@ -1,5 +1,7 @@
 #include <ESP8266WiFi.h>
 
+#include "network.h"
+
 const String ssid = WIFI_SSID;
 const String pass = WIFI_PASS;
 const String host = WIFI_HOST;
