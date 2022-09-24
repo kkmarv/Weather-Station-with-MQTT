@@ -1,13 +1,10 @@
 #include <Arduino.h>
+#include <string>
 
 #include "debug.hpp"
 #include "network.hpp"
 
-// #include "blink.h"
-// #include "buzz.h"
-// #include "humtemp.h"
-// #include "infrared.h"
-// #include "ultraSound.h"
+#include "sensors.hpp"
 
 void setup() {
   SETUP_SERIAL(9600);
@@ -15,11 +12,11 @@ void setup() {
   connectToWifi();
   connectToMQTT(1800000);
 
-  // setupDHT()
-  // setupUltraSound(D6, D7);
-  // IRSetup();
+  setupRain();
 }
 
 void loop() {
-  sendMessagePeriodically(10000, "test", "Bapanada");
+  String rain = readRain();
+  String message = "{\"rain\":" + rain + ",\"humidity\":34.60}";
+  sendMessagePeriodically(10000, "test", message);
 }

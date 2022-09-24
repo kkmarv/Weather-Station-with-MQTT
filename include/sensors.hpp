@@ -13,5 +13,6 @@ void setupPressureAltitude();
 void readPressureAltitude();
 
 // Rain
-void setupRainSensor();
-void loopRainSensor();
+void setupRain();
+void loopRain();
+String readRain();
