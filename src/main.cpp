@@ -1,6 +1,5 @@
 #include <Arduino.h>
-#include "utils.h"
-#include "wifi.h"
+#include "network.h"
 
 // #include "blink.h"
 // #include "buzz.h"
@@ -9,9 +8,10 @@
 // #include "ultraSound.h"
 
 void setup() {
-  startSerialComs();
+  SETUP_SERIAL(9600);
+
   connectToWifi();
-  connectToMQTT();
+  connectToMQTT(1800000);
 
   // setupDHT()
   // setupUltraSound(D6, D7);
@@ -19,5 +19,5 @@ void setup() {
 }
 
 void loop() {
-  publishMessagePeriodically("test", "Bapanada", 10000);
+  sendMessagePeriodically(10000, "test", "Bapanada");
 }
