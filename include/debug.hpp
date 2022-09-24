@@ -1,5 +1,4 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#pragma once
 
 #ifndef DEBUG
 
@@ -86,4 +85,3 @@
   }
 
 #endif  // DEBUG
-#endif  // DEBUG_H

@@ -1,5 +1,4 @@
-#ifndef NETWORK_H
-#define NETWORK_H
+#pragma once
 
 // WIFI
 void connectToWifi();
@@ -8,5 +7,3 @@ void connectToWifi();
 void connectToMQTT(unsigned long keepAliveInterval);
 void sendMessage(const String& topic, const String& message, short qos = 0);
 void sendMessagePeriodically(unsigned long interval, const String& topic, const String& message, short qos = 0);
-
-#endif  // NETWORK_H
