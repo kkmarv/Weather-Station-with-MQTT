@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include "utils.h"
+#include "wifi.h"
 
 #include "air_quality.h"
 #include "find_i2c_address.h"
@@ -7,11 +9,15 @@
 #include "rain_sensor.h"
 
 void setup() {
+  startSerialComs();
+  connectToWifi();
+  connectToMQTT();
+
   // setupDHT();
   // setupAir();
   // setupPressureAltitude();
   // setup_i2c();
-  setupRainSensor();
+  // setupRainSensor();
 }
 
 void loop() {
