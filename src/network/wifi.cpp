@@ -3,12 +3,9 @@
 #include "debug.hpp"
 #include "network.hpp"
 
-const char wifiSsid[] = WIFI_SSID;
-const char wifiPass[] = WIFI_PASS;
-const char userName[] = MQTT_USER;
-const char userPass[] = MQTT_PASS;
-const char broker[] = MQTT_BROK;
-const int port = MQTT_PORT;
+const String ssid = WIFI_SSID;
+const String pass = WIFI_PASS;
+const String host = WIFI_HOST;
 
 // Connect to a Wifi AP.
 // Blocks program as long as a connection cannot be established.
