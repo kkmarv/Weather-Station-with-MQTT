@@ -1,31 +1,24 @@
 #include <Arduino.h>
-#include "utils.h"
-#include "wifi.h"
 
-#include "air_quality.h"
-#include "find_i2c_address.h"
-#include "humidity_temperature.h"
-#include "pressure_altitude.h"
-#include "rain_sensor.h"
+#include "network.h"
+
+// #include "blink.h"
+// #include "buzz.h"
+// #include "humtemp.h"
+// #include "infrared.h"
+// #include "ultraSound.h"
 
 void setup() {
-  startSerialComs();
-  connectToWifi();
-  connectToMQTT();
+  SETUP_SERIAL(9600);
 
-  // setupDHT();
-  // setupAir();
-  // setupPressureAltitude();
-  // setup_i2c();
-  // setupRainSensor();
+  connectToWifi();
+  connectToMQTT(1800000);
+
+  // setupDHT()
+  // setupUltraSound(D6, D7);
+  // IRSetup();
 }
 
 void loop() {
-  Serial.println("alo");
-  delay(5000);
-  // readDHT();
-  // readAir();
-  // readPressureAltitude();
-  // loop_i2c();
-  // loopRainSensor();
+  sendMessagePeriodically(10000, "test", "Bapanada");
 }
