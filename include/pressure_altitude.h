@@ -1,2 +1,0 @@
-void setupPressureAltitude();
-void readPressureAltitude();

@@ -6,6 +6,8 @@
 
 #include <Adafruit_BMP280.h>
 
+#include "sensors.hpp"
+
 Adafruit_BMP280 bmp;  // I2C Interface
 
 void setupPressureAltitude() {

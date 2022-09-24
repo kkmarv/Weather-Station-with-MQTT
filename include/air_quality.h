@@ -1,2 +1,0 @@
-void setupAir();
-void readAir();

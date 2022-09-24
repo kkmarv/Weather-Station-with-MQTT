@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+#include "sensors.hpp"
+
 #define DIGITALREAD D4
 #define ANALOGREAD A0
 

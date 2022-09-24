@@ -2,6 +2,8 @@
 #include <DHT.h>
 #include <DHT_U.h>
 
+#include "sensors.hpp"
+
 #define DHTPIN D4      // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT22  // Sensortype DHT 22
 

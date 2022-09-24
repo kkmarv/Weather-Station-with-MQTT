@@ -33,6 +33,8 @@ bool connectToWifi() {
   Serial.print("Connected. IP address: ");
   Serial.println(WiFi.localIP());
 
+  WiFi.setAutoConnect(true);
+  WiFi.persistent(true);
   return true;
 }
 

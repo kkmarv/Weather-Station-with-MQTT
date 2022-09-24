@@ -21,9 +21,11 @@ void setup() {
 }
 
 void loop() {
+  Serial.println("alo");
+  delay(5000);
   // readDHT();
   // readAir();
   // readPressureAltitude();
   // loop_i2c();
-  loopRainSensor();
+  // loopRainSensor();
 }
