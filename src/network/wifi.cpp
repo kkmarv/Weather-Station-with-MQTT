@@ -1,6 +1,7 @@
 #include <ESP8266WiFi.h>
 
-#include "network.h"
+#include "debug.hpp"
+#include "network.hpp"
 
 const char wifiSsid[] = WIFI_SSID;
 const char wifiPass[] = WIFI_PASS;

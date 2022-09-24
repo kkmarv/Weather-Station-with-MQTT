@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
-#include "network.h"
+#include "debug.hpp"
+#include "network.hpp"
 
 // #include "blink.h"
 // #include "buzz.h"
