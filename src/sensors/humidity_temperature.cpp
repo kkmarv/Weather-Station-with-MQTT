@@ -15,71 +15,39 @@ float heatIndex(float temperature, float percentHumidity, bool isFahrenheit);
 
 void setupDHT() {
   Serial.begin(9600);
-  // Initialize device.
   dht.begin();
-  Serial.println(F("DHTxx Unified Sensor Example"));
-  // Print temperature sensor details.
   sensor_t sensor;
-  dht.temperature().getSensor(&sensor);
-  Serial.println(F("------------------------------------"));
-  Serial.println(F("Temperature Sensor"));
-  Serial.printf(("Sensor Type: "));
-  Serial.println(sensor.name);
-  Serial.print(F("Max Value:   "));
-  Serial.print(sensor.max_value);
-  Serial.println(F("°C"));
-  Serial.print(F("Min Value:   "));
-  Serial.print(sensor.min_value);
-  Serial.println(F("°C"));
-  Serial.print(F("Resolution:  "));
-  Serial.print(sensor.resolution);
-  Serial.println(F("°C"));
-  Serial.println(F("------------------------------------"));
-  // Print humidity sensor details.
-  dht.humidity().getSensor(&sensor);
-  Serial.println(F("Humidity Sensor"));
-  Serial.print(F("Sensor Type: "));
-  Serial.println(sensor.name);
-  Serial.print(F("Max Value:   "));
-  Serial.print(sensor.max_value);
-  Serial.println(F("%"));
-  Serial.print(F("Min Value:   "));
-  Serial.print(sensor.min_value);
-  Serial.println(F("%"));
-  Serial.print(F("Resolution:  "));
-  Serial.print(sensor.resolution);
-  Serial.println(F("%"));
-  Serial.println(F("------------------------------------"));
   // Set delay between sensor readings based on sensor details.
   delayMS = sensor.min_delay / 1000;
 }
 
-void readDHT() {
-  // Delay between measurements.
-  delay(delayMS);
-  // Get temperature event and print its value.
+String readTemp() {
+  String temp;
   sensors_event_t event;
+
   dht.temperature().getEvent(&event);
   DHT a(DHTPIN, DHTTYPE);
+
   if (isnan(event.temperature)) {
-    Serial.println(F("Error reading temperature!"));
+    temp="error";
   } else {
-    Serial.print(F("Temperature: "));
-    Serial.print(event.temperature);
-    Serial.print(F("°C "));
-    Serial.print(F("Feels like: "));
-    Serial.print(heatIndex(event.temperature, event.relative_humidity, false));
-    Serial.println(F("°C"));
+    temp = String(event.temperature) + "°C";
+    temp += ", feels like " + String(heatIndex(event.temperature, event.relative_humidity, false)) + "°C";
   }
-  // Get humidity event and print its value.
+  return temp;
+}
+
+String readHum() {
+  String hum;
+  sensors_event_t event;
+
   dht.humidity().getEvent(&event);
   if (isnan(event.relative_humidity)) {
-    Serial.println(F("Error reading humidity!"));
+    hum = "error";
   } else {
-    Serial.print(F("Humidity: "));
-    Serial.print(event.relative_humidity);
-    Serial.println(F("%"));
+    hum = String(event.relative_humidity) + "%";
   }
+  return hum;
 }
 
 /*!
