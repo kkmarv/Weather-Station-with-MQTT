@@ -1,6 +1,3 @@
-#include <ESP8266WiFi.h>
-
-#include "debug.hpp"
 #include "network.hpp"
 
 const String ssid = WIFI_SSID;

@@ -1,5 +1,11 @@
 #pragma once
 
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
+
+#include "debug.hpp"
+
 // Temperature & Humidity
 void setupDHT();
 String toJSON();

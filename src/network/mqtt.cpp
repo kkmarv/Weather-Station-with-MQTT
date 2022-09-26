@@ -1,7 +1,3 @@
-#include <ArduinoMqttClient.h>
-#include <ESP8266WiFi.h>
-
-#include "debug.hpp"
 #include "network.hpp"
 
 const String userName = MQTT_USER;

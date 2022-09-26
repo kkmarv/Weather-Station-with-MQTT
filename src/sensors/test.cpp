@@ -1,8 +1,3 @@
-#include <Adafruit_Sensor.h>
-#include <DHT.h>
-#include <DHT_U.h>
-
-#include "debug.hpp"
 #include "sensors.hpp"
 
 #define DHTPIN 4

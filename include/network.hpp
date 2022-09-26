@@ -1,5 +1,10 @@
 #pragma once
 
+#include <ArduinoMqttClient.h>
+#include <ESP8266WiFi.h>
+
+#include "debug.hpp"
+
 // WIFI
 void connectToWifi();
 
