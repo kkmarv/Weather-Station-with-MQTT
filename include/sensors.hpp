@@ -1,18 +1,18 @@
 #pragma once
 
-// Air Quality
-void setupAir();
-void readAir();
-
 // Temperature & Humidity
 void setupDHT();
-void readDHT();
+String toMQTT();
 
 // Pressure & Altitude
-void setupPressureAltitude();
 void readPressureAltitude();
+void setupPressureAltitude();
 
 // Rain
 void setupRain();
 void loopRain();
 String readRain();
+
+// Air Quality
+void setupAir();
+void readAir();

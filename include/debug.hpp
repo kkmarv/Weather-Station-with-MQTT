@@ -16,6 +16,9 @@
 // the current status of the connection to Serial.
 #define LOG_MQTT_ERROR_CODE(statusCode)
 
+// Print details about a sensor.
+#define LOG_SENSOR_DETES(sensor, unit)
+
 #else
 
 #define SETUP_SERIAL(baud) \
@@ -83,5 +86,13 @@
       Serial.println("WL_DISCONNECTED");   \
       break;                               \
   }
+
+#define LOG_SENSOR_DETES(sensor, unit)                       \
+  LOG_LN("Sensor Type: " + String(sensor.name));             \
+  LOG_LN("Driver Ver:  " + String(sensor.version));          \
+  LOG_LN("Unique ID:   " + String(sensor.sensor_id));        \
+  LOG_LN("Max Value:   " + String(sensor.max_value) + unit); \
+  LOG_LN("Min Value:   " + String(sensor.min_value) + unit); \
+  LOG_LN("Accuracy:    " + String(sensor.resolution) + unit);
 
 #endif  // DEBUG

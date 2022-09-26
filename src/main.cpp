@@ -1,22 +1,23 @@
 #include <Arduino.h>
-#include <string>
+#include <DHT.h>
 
 #include "debug.hpp"
 #include "network.hpp"
-
 #include "sensors.hpp"
+
+// Interval in microseconds how often a message should be sent via MQTT.
+const unsigned int messageInterval = 10000;
 
 void setup() {
   SETUP_SERIAL(9600);
 
   connectToWifi();
-  connectToMQTT(1800000);
+  connectToMQTT(messageInterval * 2);
 
-  setupRain();
+  setupDHT();
+  // setupRain();
 }
 
 void loop() {
-  String rain = readRain();
-  String message = "{\"rain\":" + rain + ",\"humidity\":34.60}";
-  sendMessagePeriodically(10000, "test", message);
+  sendMessagePeriodically(messageInterval, "test", toMQTT);
 }
