@@ -19,5 +19,5 @@ void setup() {
 }
 
 void loop() {
-  sendMessagePeriodically(messageInterval, "test", toMQTT);
+  sendMessagePeriodically(messageInterval, "test", toJSON);
 }

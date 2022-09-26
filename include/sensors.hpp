@@ -2,7 +2,7 @@
 
 // Temperature & Humidity
 void setupDHT();
-String toMQTT();
+String toJSON();
 
 // Pressure & Altitude
 void readPressureAltitude();

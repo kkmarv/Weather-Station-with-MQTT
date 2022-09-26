@@ -56,6 +56,6 @@ float readHumidity() {
   return event.relative_humidity;
 }
 
-String toMQTT() {
-  return "{temperature: " + String(readTemperature()) + ", humidity: " + String(readHumidity()) + "}";
+String toJSON() {
+  return "{temperature: \"" + String(readTemperature()) + "\", humidity: \"" + String(readHumidity()) + "\"}";
 }
