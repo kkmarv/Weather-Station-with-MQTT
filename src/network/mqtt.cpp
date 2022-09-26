@@ -8,8 +8,7 @@ const unsigned short port = MQTT_PORT;
 WiFiClient wifiClient;              // The client used to access other hosts
 MqttClient mqttClient(wifiClient);  // The client used to connect to MQTT Broker
 
-unsigned long _keepAliveInterval;         // TODO underscore or not?
-unsigned long _millisSinceLastCheck = 0;  // The milliseconds passed since last call to _haveMillisPassed() happened.
+unsigned long _keepAliveInterval;  // TODO underscore or not?
 
 // Connect to a MQTT Broker.
 // Blocks program as long as a connection cannot be established.
@@ -33,7 +32,7 @@ void connectToMQTT() {
 }
 
 // Send a message to a MQTT topic.
-void sendMessage(const String& topic, const String& message, short qos) {
+void sendMQTTMessage(const String& topic, const String& message, short qos) {
   if (!mqttClient.connected()) {
     LOG_LN("Connection to MQTT Broker lost!");
     connectToMQTT();
@@ -43,29 +42,5 @@ void sendMessage(const String& topic, const String& message, short qos) {
     mqttClient.endMessage();
 
     LOG_LN("Sent message (QoS " + String(qos) + "): " + message);
-  }
-}
-
-// Returns if the specified interval has passed since the last call to this function.
-bool _haveMillisPassed(unsigned long passedMillis) {
-  const unsigned long millisNow = millis();
-
-  if (millisNow - _millisSinceLastCheck >= passedMillis) {
-    _millisSinceLastCheck = millisNow;
-    return true;
-  }
-  return false;
-}
-
-// Send a message every other interval.
-void sendMessagePeriodically(unsigned long interval, const String& topic, const String& message, short qos) {
-  if (_haveMillisPassed(interval)) {
-    sendMessage(topic, message, qos);
-  }
-}
-
-void sendMessagePeriodically(unsigned long interval, const String& topic, String (*toMQTT)(), short qos) {
-  if (_haveMillisPassed(interval)) {
-    sendMessage(topic, toMQTT(), qos);
   }
 }
