@@ -1,3 +1,6 @@
+#include <ArduinoMqttClient.h>
+#include <ESP8266WiFi.h>
+
 #include "network.hpp"
 
 const String userName = MQTT_USER;
@@ -6,7 +9,7 @@ const String broker = MQTT_BROK;
 const unsigned short port = MQTT_PORT;
 
 WiFiClient wifiClient;              // The client used to access other hosts
-MqttClient mqttClient(wifiClient);  // The client used to connect to MQTT Broker
+MqttClient mqttClient(wifiClient);  // The client used to connect to a MQTT Broker
 
 unsigned long _keepAliveInterval;  // TODO underscore or not?
 
