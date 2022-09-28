@@ -6,8 +6,6 @@ const String ssid = WIFI_SSID;
 const String pass = WIFI_PASS;
 const String host = WIFI_HOST;
 
-// Connect to a Wifi AP.
-// Blocks program as long as a connection cannot be established.
 void connectToWifi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);

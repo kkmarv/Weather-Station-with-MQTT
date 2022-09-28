@@ -1,5 +1,6 @@
 #include <ArduinoMqttClient.h>
 #include <ESP8266WiFi.h>
+#include <StreamUtils.h>
 
 #include "network.hpp"
 
@@ -13,8 +14,6 @@ MqttClient mqttClient(wifiClient);  // The client used to connect to a MQTT Brok
 
 unsigned long _keepAliveInterval;  // TODO underscore or not?
 
-// Connect to a MQTT Broker.
-// Blocks program as long as a connection cannot be established.
 void connectToMQTT(unsigned long keepAliveInterval) {
   _keepAliveInterval = keepAliveInterval;
   mqttClient.setKeepAliveInterval(keepAliveInterval);  // After which time the Broker will disconnect the Client
@@ -34,16 +33,21 @@ void connectToMQTT() {
   connectToMQTT(_keepAliveInterval);
 }
 
-// Send a message to a MQTT topic.
-void sendMQTTMessage(const String& topic, const String& message, short qos) {
+void sendMQTTMessage(const String& topic, const String& payload, short qos) {
   if (!mqttClient.connected()) {
     LOG_LN("Connection to MQTT Broker lost!");
     connectToMQTT();
   } else {  // Only send message when connected to prevent sending old sensor data.
     mqttClient.beginMessage(topic, false, qos, false);
-    mqttClient.print(message);
+    mqttClient.print(payload);
     mqttClient.endMessage();
 
-    LOG_LN("Sent message (QoS " + String(qos) + "): " + message);
+    LOG_LN("Sent message (QoS " + String(qos) + "): " + payload);
   }
+}
+
+void sendMQTTMessage(const String& topic, StaticJsonDocument<200> jsonDoc, short qos) {
+  String payload;
+  serializeJson(jsonDoc, payload);
+  sendMQTTMessage(topic, payload, qos);
 }
