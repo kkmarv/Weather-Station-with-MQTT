@@ -36,7 +36,6 @@ class PressureTemperatureSensor {
 
   float readTemperature();
   float readPressure();
-  float calculateAltitude();
 };
 
 class RainSensor {};

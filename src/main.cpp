@@ -9,6 +9,7 @@ const unsigned int messageInterval = 10000;
 
 // Sensors
 HumidityTemperatureSensor humidityTemperatureSensor;
+PressureTemperatureSensor pressureTemperatureSensor;
 LightSensor lightSensor;
 
 void setup() {
@@ -26,6 +27,7 @@ void loop() {
 
     payload["temperature"] = String(humidityTemperatureSensor.readTemperature());
     payload["humidity"] = String(humidityTemperatureSensor.readHumidity());
+    payload["pressure"] = String(pressureTemperatureSensor.readPressure());
     payload["ambientLight"] = String(lightSensor.read());
 
     sendMQTTMessage("test", payload);

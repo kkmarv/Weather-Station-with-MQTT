@@ -38,13 +38,3 @@ float PressureTemperatureSensor::readTemperature() {
                      : LOG_LN(F("Temperature: ") + String(temperature) + F(" °C"));
   return temperature;
 }
-
-/**
- * Calculate the approximate altitude using barometric pressure.
- * @param  atmospheric Atmospheric pressure in hPa.
- * @return Approximate altitude above sea level in meters.
- */
-float PressureTemperatureSensor::calculateAltitude() {
-  float altitude = _bmp.readAltitude(1008);
-  return altitude;
-}
