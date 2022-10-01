@@ -1,46 +1,50 @@
-// /* This code is to use with Adafruit BMP280           (Metric)
-//  * It measures both temperature and pressure and it displays them on the Serial monitor with the altitude
-//  * It's a modified version of the Adafruit example code
-//  * Refer to www.surtrtech.com or SurtrTech Youtube channel
-//  */
+#include "sensors.hpp"
+#include "utils.hpp"
 
-// #include <Adafruit_BMP280.h>
+/**
+ * Pressure Sensor (BMP280)
+ */
+PressureTemperatureSensor::PressureTemperatureSensor() {
+  if (!_bmp.begin()) {
+    LOG_LN(F("Could not initialize BMP280 pressure sensor!"));
+    blinkForever(1000);
+  }
 
-// #include "sensors.hpp"
+  // Settings for a single one-time high-resolution reading.
+  _bmp.setSampling(Adafruit_BMP280::MODE_FORCED,       // Operating mode
+                   Adafruit_BMP280::SAMPLING_X2,       // Temperature oversampling
+                   Adafruit_BMP280::SAMPLING_X16,      // Pressure oversampling
+                   Adafruit_BMP280::FILTER_X16,        // Filter oversampling
+                   Adafruit_BMP280::STANDBY_MS_4000);  // Standby time
+}
 
-// Adafruit_BMP280 bmp;  // I2C Interface
+/**
+ * Read and return the barometric pressure.
+ * @return Barometric pressure in Pa.
+ */
+float PressureTemperatureSensor::readPressure() {
+  float pressure = _bmp.readPressure();
+  isnan(pressure) ? LOG_LN(F("Error reading pressure.")) : LOG_LN(F("Pressure: ") + String(pressure) + F(" Pa"));
+  return pressure;
+}
 
-// void setupPressureAltitude() {
-//   Serial.begin(9600);
-//   Serial.println(F("BMP280 test"));
+/**
+ * Read and return the temperature.
+ * @return Temperature in °C.
+ */
+float PressureTemperatureSensor::readTemperature() {
+  float temperature = _bmp.readTemperature();
+  isnan(temperature) ? LOG_LN(F("Error reading temperature."))
+                     : LOG_LN(F("Temperature: ") + String(temperature) + F(" °C"));
+  return temperature;
+}
 
-//   if (!bmp.begin()) {
-//     Serial.println(F("Could not find a valid BMP280 sensor, check wiring!"));
-//     while (1)
-//       ;
-//   }
-
-//   /* Default settings from datasheet. */
-//   bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-//                   Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-//                   Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-//                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-//                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-// }
-
-// void readPressureAltitude() {
-//   Serial.print(F("Temperature = "));
-//   Serial.print(bmp.readTemperature());
-//   Serial.println(" *C");
-
-//   Serial.print(F("Pressure = "));
-//   Serial.print(bmp.readPressure() / 100);  // displaying the Pressure in hPa, you can change the unit
-//   Serial.println(" hPa");
-
-//   Serial.print(F("Approx altitude = "));
-//   Serial.print(bmp.readAltitude(1008));  // The "1019.66" is the pressure(hPa) at sea level in day in your region
-//   Serial.println(" m");                  // If you don't know it, modify it until you get your current altitude
-
-//   Serial.println();
-//   delay(2000);
-// }
+/**
+ * Calculate the approximate altitude using barometric pressure.
+ * @param  atmospheric Atmospheric pressure in hPa.
+ * @return Approximate altitude above sea level in meters.
+ */
+float PressureTemperatureSensor::calculateAltitude() {
+  float altitude = _bmp.readAltitude(1008);
+  return altitude;
+}

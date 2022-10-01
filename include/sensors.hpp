@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Arduino.h>
+#include <Adafruit_BMP280.h>
 #include <BH1750.h>
 #include <DHT.h>
 
@@ -13,30 +13,37 @@ class HumidityTemperatureSensor {
  public:
   HumidityTemperatureSensor();
 
-  // Read and return temperature (°C) from DHT.
   float readTemperature();
-  // Read and return relative humidity (%) from DHT.
   float readHumidity();
-  // virtual String toJSON() override;
 };
 
 class LightSensor {
  private:
-  BH1750 lightMeter;
+  BH1750 _bh;
 
  public:
   LightSensor();
 
-  // Read an return ambient light intensity (lx) from BH1750.
   float read();
-  // virtual String toJSON() override;
 };
 
-/* Deprecated declarations */
+class PressureTemperatureSensor {
+ private:
+  Adafruit_BMP280 _bmp;
 
-// Pressure & Altitude
-void readPressureAltitude();
-void setupPressureAltitude();
+ public:
+  PressureTemperatureSensor();
+
+  float readTemperature();
+  float readPressure();
+  float calculateAltitude();
+};
+
+class RainSensor {};
+
+class GasSensor {};
+
+/* Deprecated declarations */
 
 // Rain
 void setupRain();

@@ -1,31 +1,19 @@
-#include <Arduino.h>
-#include <DHT.h>
+#include <ArduinoJson.h>
 
 #include "network.hpp"
 #include "sensors.hpp"
+#include "utils.hpp"
 
 // Interval in microseconds how often a message should be sent via MQTT.
 const unsigned int messageInterval = 10000;
-// The milliseconds passed since last call to haveMillisPassed() happened.
-unsigned long millisSinceLastCheck = 0;
 
 // Sensors
 HumidityTemperatureSensor humidityTemperatureSensor;
 LightSensor lightSensor;
 
-// Returns if the specified interval has passed since the last call to this function.
-bool haveMillisPassed(unsigned long passedMillis) {
-  const unsigned long millisNow = millis();
-
-  if (millisNow - millisSinceLastCheck >= passedMillis) {
-    millisSinceLastCheck = millisNow;
-    return true;
-  }
-  return false;
-}
-
 void setup() {
   SETUP_SERIAL(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   connectToWifi();
   connectToMQTT(messageInterval * 2);
@@ -33,10 +21,16 @@ void setup() {
 
 void loop() {
   if (haveMillisPassed(messageInterval)) {
-    String payload = "{temperature: \"" + String(humidityTemperatureSensor.readTemperature()) + "\", humidity: \"" +
-                     String(humidityTemperatureSensor.readHumidity()) + "\", ambientLight: \"" +
-                     String(lightSensor.read()) + "\"}";
+    digitalWrite(LED_BUILTIN, LOW);
+    StaticJsonDocument<200> payload;  // TODO optimize byte size to actual size of JSON contents
+
+    payload["temperature"] = String(humidityTemperatureSensor.readTemperature());
+    payload["humidity"] = String(humidityTemperatureSensor.readHumidity());
+    payload["ambientLight"] = String(lightSensor.read());
 
     sendMQTTMessage("test", payload);
+
+    digitalWrite(LED_BUILTIN, HIGH);
+    LOG_LN();
   }
 }
