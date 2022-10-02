@@ -22,12 +22,16 @@ void setup() {
 
 void loop() {
   if (haveMillisPassed(messageInterval)) {
+    // Light the internal LED to let it blink when doing sensor readings.
     digitalWrite(LED_BUILTIN, LOW);
-    StaticJsonDocument<200> payload;  // TODO optimize byte size to actual size of JSON contents
 
+    // Construct a JSON message.
+    StaticJsonDocument<200> payload;  // TODO optimize byte size to actual size of JSON contents
     payload["temperature"] = String(humidityTemperatureSensor.readTemperature());
     payload["humidity"] = String(humidityTemperatureSensor.readHumidity());
     payload["pressure"] = String(pressureTemperatureSensor.readPressure());
+    // payload["windSpeed"] = String();
+    // payload["windDirection"] = String();
     payload["ambientLight"] = String(lightSensor.read());
 
     sendMQTTMessage("test", payload);
