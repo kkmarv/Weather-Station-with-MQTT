@@ -9,7 +9,7 @@ const unsigned int messageInterval = 10000;
 
 // Sensors
 HumidityTemperatureSensor humidityTemperatureSensor;
-PressureTemperatureSensor pressureTemperatureSensor;
+PressureTemperatureSensor pressureTemperatureSensor(messageInterval);
 LightSensor lightSensor;
 
 void setup() {

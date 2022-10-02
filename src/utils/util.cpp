@@ -17,15 +17,15 @@ bool haveMillisPassed(unsigned long passedMillis) {
   return false;
 }
 
-void blinkForever(unsigned long intervall) {
-  while (1) {
-    blink(intervall);
-  }
-}
-
 void blink(unsigned long intervall) {
   digitalWrite(LED_BUILTIN, LOW);
   delay(intervall);
   digitalWrite(LED_BUILTIN, HIGH);
   delay(intervall);
+}
+
+void blinkForever(unsigned long intervall) {
+  while (1) {
+    blink(intervall);
+  }
 }

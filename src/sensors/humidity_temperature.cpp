@@ -19,7 +19,7 @@ HumidityTemperatureSensor::HumidityTemperatureSensor() : _dht(DHT_PIN, DHT_TYPE)
 float HumidityTemperatureSensor::readTemperature() {
   float temperature = _dht.readTemperature();
   isnan(temperature) ? LOG_LN(F("Error reading temperature."))
-                     : LOG_LN(F("Temperature: ") + String(temperature) + F("°C"));
+                     : LOG_LN(F("Temperature: ") + String(temperature) + F(" °C"));
   return temperature;
 }
 
@@ -29,6 +29,6 @@ float HumidityTemperatureSensor::readTemperature() {
  */
 float HumidityTemperatureSensor::readHumidity() {
   float humidity = _dht.readHumidity();
-  isnan(humidity) ? LOG_LN(F("Error reading humidity.")) : LOG_LN(F("Humidity: ") + String(humidity) + F("%"));
+  isnan(humidity) ? LOG_LN(F("Error reading humidity.")) : LOG_LN(F("Humidity: ") + String(humidity) + F(" %"));
   return humidity;
 }

@@ -30,9 +30,11 @@ class LightSensor {
 class PressureTemperatureSensor {
  private:
   Adafruit_BMP280 _bmp;
+  unsigned long lastReadTimestamp = 0;
+  unsigned long readRefreshIntervall;
 
  public:
-  PressureTemperatureSensor();
+  PressureTemperatureSensor(unsigned long messageInterval);
 
   float readTemperature();
   float readPressure();
