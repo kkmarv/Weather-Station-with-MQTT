@@ -4,8 +4,8 @@
 #include "sensors.hpp"
 #include "utils.hpp"
 
-// Interval in microseconds how often a message should be sent via MQTT.
-const unsigned int messageInterval = 10000;
+// Interval in microseconds how often readings should be made and a message should be sent via MQTT.
+const unsigned int messageInterval = 15000;
 
 // Sensors
 HumidityTemperatureSensor humidityTemperatureSensor;
@@ -32,7 +32,7 @@ void loop() {
     payload["pressure"] = String(pressureTemperatureSensor.readPressure());
     // payload["windSpeed"] = String();
     // payload["windDirection"] = String();
-    payload["ambientLight"] = String(lightSensor.read());
+    payload["lightIntensity"] = String(lightSensor.read());
 
     sendMQTTMessage("test", payload);
 
