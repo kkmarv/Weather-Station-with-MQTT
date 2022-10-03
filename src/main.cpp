@@ -5,7 +5,7 @@
 #include "utils.hpp"
 
 // Interval in microseconds how often readings should be made and a message should be sent via MQTT.
-const unsigned int messageInterval = 15000;
+const unsigned int messageInterval = 20000;
 
 // Sensors
 HumidityTemperatureSensor humidityTemperatureSensor;
