@@ -51,6 +51,15 @@ class RainSensor {
 class GasSensor {
  private:
   MQUnifiedsensor _mq;
+  std::map<String, float> _readings = {
+      {"CO", -1.0f},     // carbonMonoxide
+      {"C2H6O", -1.0f},  // alcohol aka ethanol
+      {"CO2", -1.0f},    // carbonDioxide
+      {"C7H8", -1.0f},   // toluene
+      {"NH4", -1.0f},    // ammonium
+      {"C3H6O", -1.0f}   // acetone
+  };
+
  public:
   GasSensor();
   float readCarbonMonoxide();
@@ -58,6 +67,6 @@ class GasSensor {
   float readCarbonDioxide();
   float readToluene();
   float readAmmonium();
-  float readAcetone(); 
-  std::map<String, float> read();
+  float readAcetone();
+  const std::map<String, float>& read();
 };

@@ -4,17 +4,17 @@
 #include <map>
 #include <string>
 
-#include "utils.hpp"
 #include "sensors.hpp"
+#include "utils.hpp"
 
-#define board "ESP8266"
-#define Voltage_Resolution 5
-#define GASPIN A0
-#define type "MQ-135"
-#define ADC_Bit_Resolution 10   // For arduino UNO/MEGA/NANO
-#define RatioMQ135CleanAir 3.6  // RS / R0 = 3.6 ppm
+#define GAS_PIN A0
+#define BOARD "ESP8266"
+#define SENSOR_TYPE "MQ-135"
+#define VOLTAGE_RESOLUTION 5
+#define ADC_BIT_RESOLUTION 10      // For arduino UNO/MEGA/NANO
+#define RATIO_MQ135_CLEAN_AIR 3.6  // RS / R0 = 3.6 ppm
 
-GasSensor::GasSensor() : _mq(board, Voltage_Resolution, ADC_Bit_Resolution, GASPIN, type) {
+GasSensor::GasSensor() : _mq(BOARD, VOLTAGE_RESOLUTION, ADC_BIT_RESOLUTION, GAS_PIN, SENSOR_TYPE) {
   // Set math model to calculate the PPM concentration and the value of constants
   _mq.setRegressionMethod(1);  //_PPM =  a*ratio^b
   _mq.init();
@@ -33,7 +33,7 @@ GasSensor::GasSensor() : _mq(board, Voltage_Resolution, ADC_Bit_Resolution, GASP
 
   for (int i = 1; i <= 10; i++) {
     _mq.update();
-    calcR0 += _mq.calibrate(RatioMQ135CleanAir);
+    calcR0 += _mq.calibrate(RATIO_MQ135_CLEAN_AIR);
     LOG(".");
   }
   _mq.setR0(calcR0 / 10);
@@ -86,23 +86,22 @@ float GasSensor::readAcetone() {
   return _mq.readSensor();
 }
 
-std::map<String, float> GasSensor::read() {
+const std::map<String, float>& GasSensor::read() {
   _mq.update();
 
-  std::map<String, float> gasReadings = {
-      {"CO", readCarbonMonoxide()},  // carbonMonoxide
-      {"C2H6O", readEthanol()},      // alcohol aka ethanol
-      {"CO2", readCarbonDioxide()},  // carbonDioxide
-      {"C7H8", readToluene()},       // toluene
-      {"NH4", readAmmonium()},       // ammonium
-      {"C3H6O", readAcetone()}       // acetone
-  };
+  _readings["CO"] = readCarbonMonoxide();
+  _readings["C2H6O"] = readEthanol();
+  _readings["CO2"] = readCarbonDioxide();
+  _readings["C7H8"] = readToluene();
+  _readings["NH4"] = readAmmonium();
+  _readings["C3H6O"] = readAcetone();
 
-  LOG_LN("Acetone: " + String(gasReadings["C3H60"]) + " ppm");
-  LOG_LN("Ammonium: " + String(gasReadings["NH4"]) + " ppm");
-  LOG_LN("Carbonmonoxide: " + String(gasReadings["CO"]) + " ppm");
-  LOG_LN("Carbondioxide: " + String(gasReadings["CO2"]) + " ppm");
-  LOG_LN("Ethanol: " + String(gasReadings["C2H60"]) + " ppm");
-  LOG_LN("Toluene: " + String(gasReadings["C7H8"]) + " ppm");
-  return gasReadings;
+  LOG_LN("Acetone: " + String(_readings["C3H60"]) + " ppm");
+  LOG_LN("Ammonium: " + String(_readings["NH4"]) + " ppm");
+  LOG_LN("Carbonmonoxide: " + String(_readings["CO"]) + " ppm");
+  LOG_LN("Carbondioxide: " + String(_readings["CO2"]) + " ppm");
+  LOG_LN("Ethanol: " + String(_readings["C2H60"]) + " ppm");
+  LOG_LN("Toluene: " + String(_readings["C7H8"]) + " ppm");
+
+  return _readings;
 }

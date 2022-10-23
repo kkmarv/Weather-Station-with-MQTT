@@ -1,9 +1,9 @@
+#include <Arduino.h>
 #include <ArduinoJson.h>
 
 #include "network.hpp"
 #include "sensors.hpp"
 #include "utils.hpp"
-
 
 // Interval in microseconds how often readings should be made.
 // Sends a message simultaneously via MQTT.
@@ -16,7 +16,6 @@ LightSensor lightSensor;
 RainSensor rainSensor;
 GasSensor gasSensor;
 
-
 void setup() {
   SETUP_SERIAL(9600);
   pinMode(LED_BUILTIN, OUTPUT);
@@ -26,6 +25,9 @@ void setup() {
 }
 
 void loop() {
+  LOG_LN(digitalRead(D4));
+  delay(500);
+
   if (haveMillisPassed(messageInterval)) {
     // Light the internal LED to let it blink when doing sensor readings.
     digitalWrite(LED_BUILTIN, LOW);
@@ -39,13 +41,13 @@ void loop() {
     payload["windSpeed"] = String();
     payload["windDirection"] = String();
     payload["lightIntensity"] = String(lightSensor.read());
-    auto gasReadings = gasSensor.read();
-    payload["airQuality"]["acetone"] = gasReadings["C3H6O"];
-    payload["airQuality"]["ammonium"] = gasReadings["NH4"];
-    payload["airQuality"]["carbonDioxide"] = gasReadings["CO2"];
-    payload["airQuality"]["carbonMonoxide"] = gasReadings["CO"];
-    payload["airQuality"]["ethanol"] = gasReadings["C2H6O"];
-    payload["airQuality"]["toluene"] = gasReadings["C7H8"];
+    auto& gasReadings = gasSensor.read();
+    payload["airQuality"]["acetone"] = gasReadings.at("C3H6O");
+    payload["airQuality"]["ammonium"] = gasReadings.at("NH4");
+    payload["airQuality"]["carbonDioxide"] = gasReadings.at("CO2");
+    payload["airQuality"]["carbonMonoxide"] = gasReadings.at("CO");
+    payload["airQuality"]["ethanol"] = gasReadings.at("C2H6O");
+    payload["airQuality"]["toluene"] = gasReadings.at("C7H8");
 
     sendMQTTMessage("weather", payload);
 
