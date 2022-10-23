@@ -5,8 +5,7 @@
 
 // DHT configuration
 #define DHT_PIN D8
-#define DHT_TYPE DHT11  // if using DHT 11
-//#define DHTTYPE DHT22 // is using DHT 22
+#define DHT_TYPE DHT22
 
 HumidityTemperatureSensor::HumidityTemperatureSensor() : _dht(DHT_PIN, DHT_TYPE) {
   _dht.begin();

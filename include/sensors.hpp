@@ -3,9 +3,10 @@
 #include <Adafruit_BMP280.h>
 #include <BH1750.h>
 #include <DHT.h>
+#include <MQUnifiedsensor.h>
+#include <map>
 
 #include "debug.hpp"
-
 class HumidityTemperatureSensor {
  private:
   DHT _dht;
@@ -40,17 +41,23 @@ class PressureTemperatureSensor {
   float readPressure();
 };
 
-class RainSensor {};
+class RainSensor {
+ public:
+  RainSensor();
 
-class GasSensor {};
+  int read();
+};
 
-/* Deprecated declarations */
-
-// Rain
-void setupRain();
-void loopRain();
-String readRain();
-
-// Air Quality
-void setupAir();
-void readAir();
+class GasSensor {
+ private:
+  MQUnifiedsensor _mq;
+ public:
+  GasSensor();
+  float readCarbonMonoxide();
+  float readEthanol();
+  float readCarbonDioxide();
+  float readToluene();
+  float readAmmonium();
+  float readAcetone(); 
+  std::map<String, float> read();
+};

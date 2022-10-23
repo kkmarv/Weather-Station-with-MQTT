@@ -4,6 +4,7 @@
 #include "sensors.hpp"
 #include "utils.hpp"
 
+
 // Interval in microseconds how often readings should be made.
 // Sends a message simultaneously via MQTT.
 const unsigned int messageInterval = 20000;
@@ -12,6 +13,9 @@ const unsigned int messageInterval = 20000;
 HumidityTemperatureSensor humidityTemperatureSensor;
 PressureTemperatureSensor pressureTemperatureSensor(messageInterval);
 LightSensor lightSensor;
+RainSensor rainSensor;
+GasSensor gasSensor;
+
 
 void setup() {
   SETUP_SERIAL(9600);
@@ -31,11 +35,19 @@ void loop() {
     payload["temperature"] = String(humidityTemperatureSensor.readTemperature());
     payload["humidity"] = String(humidityTemperatureSensor.readHumidity());
     payload["pressure"] = String(pressureTemperatureSensor.readPressure());
-    // payload["windSpeed"] = String();
-    // payload["windDirection"] = String();
+    payload["rain"] = String(rainSensor.read());
+    payload["windSpeed"] = String();
+    payload["windDirection"] = String();
     payload["lightIntensity"] = String(lightSensor.read());
+    auto gasReadings = gasSensor.read();
+    payload["airQuality"]["acetone"] = gasReadings["C3H6O"];
+    payload["airQuality"]["ammonium"] = gasReadings["NH4"];
+    payload["airQuality"]["carbonDioxide"] = gasReadings["CO2"];
+    payload["airQuality"]["carbonMonoxide"] = gasReadings["CO"];
+    payload["airQuality"]["ethanol"] = gasReadings["C2H6O"];
+    payload["airQuality"]["toluene"] = gasReadings["C7H8"];
 
-    sendMQTTMessage("test", payload);
+    sendMQTTMessage("weather", payload);
 
     digitalWrite(LED_BUILTIN, HIGH);
     LOG_LN();
