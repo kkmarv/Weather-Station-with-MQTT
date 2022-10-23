@@ -4,7 +4,8 @@
 #include "sensors.hpp"
 #include "utils.hpp"
 
-// Interval in microseconds how often readings should be made and a message should be sent via MQTT.
+// Interval in microseconds how often readings should be made.
+// Sends a message simultaneously via MQTT.
 const unsigned int messageInterval = 20000;
 
 // Sensors
