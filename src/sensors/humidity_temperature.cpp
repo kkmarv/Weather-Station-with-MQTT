@@ -3,12 +3,12 @@
 #include "sensors.hpp"
 #include "utils.hpp"
 
-// DHT configuration
-#define DHT_PIN D8
-#define DHT_TYPE DHT22
-
-HumidityTemperatureSensor::HumidityTemperatureSensor() : _dht(DHT_PIN, DHT_TYPE) {
-  _dht.begin();
+/**
+ * @param pin The sensor's digital read/write pin.
+ * @param dhtType The type of the DHT. Possible values are: "DHT11", "DHT12", "DHT21" "DHT22"
+ */
+HumidityTemperatureSensor::HumidityTemperatureSensor(uint8_t pin, uint8_t dhtType) : dht_(pin, dhtType) {
+  dht_.begin();
 }
 
 /**
@@ -16,7 +16,7 @@ HumidityTemperatureSensor::HumidityTemperatureSensor() : _dht(DHT_PIN, DHT_TYPE)
  * @return Temperature in °C.
  */
 float HumidityTemperatureSensor::readTemperature() {
-  float temperature = _dht.readTemperature();
+  float temperature = dht_.readTemperature();
   isnan(temperature) ? LOG_LN(F("Error reading temperature."))
                      : LOG_LN(F("Temperature: ") + String(temperature) + F(" °C"));
   return temperature;
@@ -27,7 +27,7 @@ float HumidityTemperatureSensor::readTemperature() {
  * @return Relative humidity in percent (1-100%).
  */
 float HumidityTemperatureSensor::readHumidity() {
-  float humidity = _dht.readHumidity();
+  float humidity = dht_.readHumidity();
   isnan(humidity) ? LOG_LN(F("Error reading humidity.")) : LOG_LN(F("Humidity: ") + String(humidity) + F(" %"));
   return humidity;
 }

@@ -46,7 +46,7 @@ void sendMQTTMessage(const String& topic, const String& payload, short qos) {
   }
 }
 
-void sendMQTTMessage(const String& topic, StaticJsonDocument<200> jsonDoc, short qos) {
+void sendMQTTMessage(const String& topic, StaticJsonDocument<200>& jsonDoc, short qos) {
   String payload;
   serializeJson(jsonDoc, payload);
   sendMQTTMessage(topic, payload, qos);

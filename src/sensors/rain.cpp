@@ -2,22 +2,24 @@
 
 #include "sensors.hpp"
 
-#define RAINSENS_PIN A0
-
 // int threshold_dry = 1000;
 // int threshold_moist = 800;
 // int threshold_wet = 500;
 
-RainSensor::RainSensor() {
-    pinMode(RAINSENS_PIN, INPUT);
+/**
+ * @param pin The rain sensor's digital read pin.
+ */
+RainSensor::RainSensor(uint8_t pin) {
+  pin_ = pin;
+  pinMode(pin, INPUT);
 }
 
 /*
- * Read and return the current rain intensity.
- * @return rain intensity from 1024 (low) to 0 (high).
+ * Read and return the current rain sensor's wetness.
+ * @return Wetness from 1024 (low) to 0 (high).
  */
 int RainSensor::read() {
-    int intensity = analogRead(RAINSENS_PIN);
-    isnan(intensity) ? LOG_LN(F("Error reading rain intensity.")) : LOG_LN(F("Rain: ") + String(intensity));
-    return intensity;
+  int wetness = analogRead(pin_);
+  isnan(wetness) ? LOG_LN(F("Error reading rain sensor.")) : LOG_LN(F("Rain: ") + String(wetness));
+  return wetness;
 }

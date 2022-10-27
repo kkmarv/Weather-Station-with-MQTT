@@ -12,10 +12,16 @@ void connectToWifi();
 
 // MQTT
 
-// Connect to a MQTT Broker.
-// Blocks program as long as a connection cannot be established.
+/**
+ * Connect to a MQTT Broker.
+ * Blocks the program as long as a connection is being established.
+ */
 void connectToMQTT(unsigned long keepAliveInterval);
-// Send a message to a MQTT topic.
+/**
+ * Send a message to a specific MQTT topic.
+ */
 void sendMQTTMessage(const String& topic, const String& payload, short qos = 0);
-// Send a JSON message to a MQTT topic.
-void sendMQTTMessage(const String& topic, StaticJsonDocument<200> jsonDoc, short qos = 0);
+/**
+ * Send a message to a specific MQTT topic.
+ */
+void sendMQTTMessage(const String& topic, StaticJsonDocument<200>& jsonDoc, short qos = 0);
