@@ -30,18 +30,31 @@ float WindSensor::readSpeed() {
  * Read and return the current wind direction.
  * @returns Wind direction: N: North, E: East, S: South, W: West, X: No(t enough) wind
  */
-char WindSensor::readDirection() {
-  char windDir;
+WindDirection WindSensor::readDirection() {
   if (digitalRead(northPin_)) {
-    windDir = 'N';
-  } else if (digitalRead(eastPin_)) {
-    windDir = 'E';
+    if (digitalRead(eastPin_)) {
+      windDir_ = WindDirection::NORTH_EAST;
+    } else if (digitalRead(westPin_)) {
+      windDir_ = WindDirection::NORTH_WEST;
+    } else {
+      windDir_ = WindDirection::NORTH;
+    }
+
   } else if (digitalRead(southPin_)) {
-    windDir = 'S';
+    if (digitalRead(eastPin_)) {
+      windDir_ = WindDirection::SOUTH_EAST;
+    } else if (digitalRead(westPin_)) {
+      windDir_ = WindDirection::SOUTH_WEST;
+    } else {
+      windDir_ = WindDirection::SOUTH;
+    }
+
+  } else if (digitalRead(eastPin_)) {
+    windDir_ = WindDirection::EAST;
+
   } else if (digitalRead(westPin_)) {
-    windDir = 'W';
-  } else {
-    windDir = 'X';
+    windDir_ = WindDirection::WEST;
   }
-  return windDir;
+
+  return windDir_;
 }

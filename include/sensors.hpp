@@ -75,6 +75,8 @@ class GasSensor {
   float readToluene();
 };
 
+enum WindDirection { NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST };
+
 // Represents a custom 3D printed anemometer.
 class WindSensor {
  private:
@@ -83,9 +85,10 @@ class WindSensor {
   uint8_t eastPin_;
   uint8_t southPin_;
   uint8_t westPin_;
+  WindDirection windDir_;
 
  public:
   WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint8_t southPin, uint8_t westPin);
   float readSpeed();
-  char readDirection();
+  WindDirection readDirection();
 };
