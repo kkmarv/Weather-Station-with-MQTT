@@ -45,9 +45,10 @@ class PressureTemperatureSensor {
 class RainSensor {
  private:
   uint8_t pin_;
+  uint8_t controlPin_;
 
  public:
-  RainSensor(uint8_t pin);
+  RainSensor(uint8_t pin, uint8_t controlPin);
   int read();
 };
 
@@ -55,6 +56,7 @@ class RainSensor {
 class GasSensor {
  private:
   MQUnifiedsensor mq_;
+  uint8_t controlPin_;
   std::map<String, float> readings_ = {
       {"CO", -1.0f},     // carbonMonoxide
       {"C2H6O", -1.0f},  // alcohol aka ethanol
@@ -65,7 +67,7 @@ class GasSensor {
   };
 
  public:
-  GasSensor(uint8_t pin);
+  GasSensor(uint8_t pin, uint8_t controlPin);
   const std::map<String, float>& read();
   float readAcetone();
   float readAmmonium();
@@ -75,10 +77,11 @@ class GasSensor {
   float readToluene();
 };
 
-enum WindDirection { NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST };
-
 // Represents a custom 3D printed anemometer.
 class WindSensor {
+ public:
+  enum WindDirection { NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST };
+
  private:
   uint8_t speedPin_;
   uint8_t northPin_;
@@ -89,6 +92,6 @@ class WindSensor {
 
  public:
   WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint8_t southPin, uint8_t westPin);
-  float readSpeed();
   WindDirection readDirection();
+  float readSpeed();
 };

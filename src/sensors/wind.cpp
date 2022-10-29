@@ -3,7 +3,12 @@
 #include "sensors.hpp"
 
 /**
- * @param pin The wind sensor's digital read pin.
+ * @param speedPin Will be used to calculate wind speed.
+ * Is set to HIGH if the anemometer does a full rotation and passes a reed switch.
+ * @param northPin Indicates with a HIGH that the wind direction is approximately North.
+ * @param eastPin Indicates with a HIGH that the wind direction is approximately East.
+ * @param southPin Indicates with a HIGH that the wind direction is approximately South.
+ * @param westPin Indicates with a HIGH that the wind direction is approximately West.
  */
 WindSensor::WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint8_t southPin, uint8_t westPin) {
   speedPin_ = speedPin;
@@ -23,14 +28,15 @@ WindSensor::WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint
  * @returns Wind speed in m/s.
  */
 float WindSensor::readSpeed() {
+  LOG_LN(digitalRead(speedPin_));
   return -1.0f;  // TODO
 }
 
 /**
  * Read and return the current wind direction.
- * @returns Wind direction: N: North, E: East, S: South, W: West, X: No(t enough) wind
+ * @returns Wind direction
  */
-WindDirection WindSensor::readDirection() {
+WindSensor::WindDirection WindSensor::readDirection() {
   if (digitalRead(northPin_)) {
     if (digitalRead(eastPin_)) {
       windDir_ = WindDirection::NORTH_EAST;

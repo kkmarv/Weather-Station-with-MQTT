@@ -15,8 +15,15 @@
 
 /**
  * @param pin The gas sensor's analog pin.
+ * @param controlPin The gas sensor's digital write pin.
+ * If set to HIGH, The gas sensor's readings will be written to the analog pin. (This will be handled internally.)
+ * This is used because the Wemos D1 only has one analog pin available.
  */
-GasSensor::GasSensor(uint8_t pin) : mq_(BOARD, VOLTAGE_RESOLUTION, ADC_BIT_RESOLUTION, pin, SENSOR_TYPE) {
+GasSensor::GasSensor(uint8_t pin, uint8_t controlPin)
+    : mq_(BOARD, VOLTAGE_RESOLUTION, ADC_BIT_RESOLUTION, pin, SENSOR_TYPE) {
+  controlPin_ = controlPin;
+  pinMode(controlPin_, OUTPUT);
+  digitalWrite(controlPin_, HIGH);
   // Set math model to calculate the PPM concentration and the value of constants
   mq_.setRegressionMethod(1);  //_PPM =  a*ratio^b
   mq_.init();
@@ -28,7 +35,7 @@ GasSensor::GasSensor(uint8_t pin) : mq_(BOARD, VOLTAGE_RESOLUTION, ADC_BIT_RESOL
   // Explanation:
   // In this routine the sensor will measure the resistance of the sensor supposedly before being pre-heated
   // and on clean air (Calibration conditions), setting up R0 value.
-  // We recomend executing this routine only on setup in laboratory conditions.
+  // We recommend executing this routine only on setup in laboratory conditions.
   // This routine does not need to be executed on each restart, you can load your R0 value from eeprom.
   LOG("Air quality sensor calibrating. Please wait.");
   float calcR0 = 0;
@@ -50,6 +57,7 @@ GasSensor::GasSensor(uint8_t pin) : mq_(BOARD, VOLTAGE_RESOLUTION, ADC_BIT_RESOL
   }
 
   LOG_LN("Waiting for readings...");
+  digitalWrite(controlPin_, LOW);
 }
 
 float GasSensor::readCarbonMonoxide() {
@@ -67,7 +75,8 @@ float GasSensor::readEthanol() {
 float GasSensor::readCarbonDioxide() {
   mq_.setA(110.47);
   mq_.setB(-2.862);
-  return mq_.readSensor();
+  // The sensor's readings are relative to the normal atmospheric CO2 content of ~400ppm.
+  return mq_.readSensor() + 400;
 }
 
 float GasSensor::readToluene() {
@@ -89,6 +98,7 @@ float GasSensor::readAcetone() {
 }
 
 const std::map<String, float>& GasSensor::read() {
+  digitalWrite(controlPin_, HIGH);
   mq_.update();
 
   readings_["CO"] = readCarbonMonoxide();
@@ -97,6 +107,8 @@ const std::map<String, float>& GasSensor::read() {
   readings_["C7H8"] = readToluene();
   readings_["NH4"] = readAmmonium();
   readings_["C3H6O"] = readAcetone();
+
+  digitalWrite(controlPin_, LOW);
 
   LOG_LN("Acetone: " + String(readings_["C3H60"]) + " ppm");
   LOG_LN("Ammonium: " + String(readings_["NH4"]) + " ppm");
