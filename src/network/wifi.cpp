@@ -6,7 +6,7 @@ const String ssid = WIFI_SSID;
 const String pass = WIFI_PASS;
 const String host = WIFI_HOST;
 
-void connectToWifi() {
+void connectToWiFi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pass);
 

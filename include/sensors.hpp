@@ -158,10 +158,17 @@ class WindSensor {
 
  private:
   uint8_t speedPin_, northPin_, eastPin_, southPin_, westPin_;
-  WindDirection windDir_;
+  int anemometerRadius_;             // in mm from middle to magnet
+  int anemometerRotationCount_ = 0;  // number of full rotations until the last call to calculateSpeed()
+  WindDirection windDir_ = NORTH;    // the last wind direction that has been read from the sensor
+  bool lastAnemometerSignal_ = false;
+  unsigned long calculationInterval_;
 
  public:
   /**
+   * @param anemometerRadius The radius of the anemometer in millimeters.
+   * Please specify the radius only up to the magnet.
+   * @param calculationInterval The interval in milliseconds in which the wind speed will be calculated.
    * @param speedPin Will be used to calculate wind speed.
    * Is set to HIGH if the anemometer does a full rotation and passes a reed switch.
    * @param northPin Indicates with a HIGH that the wind direction is approximately North.
@@ -169,7 +176,13 @@ class WindSensor {
    * @param southPin Indicates with a HIGH that the wind direction is approximately South.
    * @param westPin Indicates with a HIGH that the wind direction is approximately West.
    */
-  WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint8_t southPin, uint8_t westPin);
+  WindSensor(int anemometerRadius,
+             unsigned long calculationInterval,
+             uint8_t speedPin,
+             uint8_t northPin,
+             uint8_t eastPin,
+             uint8_t southPin,
+             uint8_t westPin);
 
   /**
    * Read and return the current wind direction.
@@ -178,10 +191,17 @@ class WindSensor {
   WindDirection readDirection();
 
   /**
-   * Read and return the current wind speed.
-   * @returns Wind speed in m/s.
+   * Calculate and return the average wind speed over the given interval.
+   * Remember to call checkOnFullRotation() inside main loop.
+   * @returns Wind speed in km/h.
    */
-  float readSpeed();
+  float calculateSpeed();
+
+  /**
+   * Reads the windSpeed pin and checks if the anemometer did a full rotation yet,
+   * then updates the internal WindSensor state.
+   */
+  void checkOnFullRotation();
 
   /**
    *

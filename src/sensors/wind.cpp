@@ -2,7 +2,15 @@
 
 #include "sensors.hpp"
 
-WindSensor::WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint8_t southPin, uint8_t westPin) {
+WindSensor::WindSensor(int anemometerRadius,
+                       unsigned long calculationInterval,
+                       uint8_t speedPin,
+                       uint8_t northPin,
+                       uint8_t eastPin,
+                       uint8_t southPin,
+                       uint8_t westPin) {
+  anemometerRadius_ = anemometerRadius;
+  calculationInterval_ = calculationInterval;
   speedPin_ = speedPin;
   northPin_ = northPin;
   eastPin_ = eastPin;
@@ -15,10 +23,20 @@ WindSensor::WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint
   pinMode(westPin_, INPUT);
 }
 
-float WindSensor::readSpeed() {  // TODO
-  float speed = digitalRead(speedPin_);
+float WindSensor::calculateSpeed() {
+  float speed = anemometerRotationCount_ * TWO_PI * anemometerRadius_ / calculationInterval_;  // in mm/ms
+  speed = (speed / 1000) * 3.6;                                                                // in km/h
   LOG_LN("Wind speed: " + String(speed) + " km/h");
+  anemometerRotationCount_ = 0;
   return speed;
+}
+
+void WindSensor::checkOnFullRotation() {
+  bool anemometerSignal = digitalRead(speedPin_);
+  if (!anemometerSignal && lastAnemometerSignal_) {
+    anemometerRotationCount_++;
+  }
+  lastAnemometerSignal_ = anemometerSignal;
 }
 
 WindSensor::WindDirection WindSensor::readDirection() {

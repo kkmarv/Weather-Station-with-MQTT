@@ -8,7 +8,7 @@
 
 // Connect to a Wifi AP.
 // Blocks program as long as a connection cannot be established.
-void connectToWifi();
+void connectToWiFi();
 
 // MQTT
 

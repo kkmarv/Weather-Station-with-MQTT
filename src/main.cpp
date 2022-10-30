@@ -6,7 +6,7 @@
 #include "sensors.hpp"
 #include "utils.hpp"
 
-// Interval in microseconds how often to read sensors and send data via MQTT.
+// Interval in milliseconds how often to read sensors and send data via MQTT.
 const unsigned int messageInterval = 4000;
 
 // Sensors
@@ -14,7 +14,7 @@ GasSensor gasSensor(A0, D6);
 WetnessSensor wetnessSensor(A0, D7);
 LightSensor lightSensor(D14, D15);
 // Use pin D9 for the wind speed pin to have the onboard SCL LED light up when there is a HIGH signal on D9.
-WindSensor windSensor(D9, D10, D11, D12, D13);
+WindSensor windSensor(150, messageInterval, D9, D10, D11, D12, D13);
 HumidityTemperatureSensor humidityTemperatureSensor(D8, DHT22);
 PressureTemperatureSensor pressureTemperatureSensor(messageInterval);
 
@@ -29,13 +29,13 @@ void setup() {
   // Unfortunately, we do not have a working BMP pressure sensor.
   // pressureTemperatureSensor.init();
 
-  // connectToWifi();
-  // connectToMQTT(messageInterval * 2);
+  connectToWiFi();
+  connectToMQTT(messageInterval * 2);
 }
 
 void loop() {
   // continuous readings
-  // windSensor.readSpeed();
+  windSensor.checkOnFullRotation();
 
   // one time readings
   if (haveMillisPassed(messageInterval)) {
@@ -47,7 +47,7 @@ void loop() {
     payload["humidity"] = String(humidityTemperatureSensor.readHumidity());
     // payload["pressure"] = String(pressureTemperatureSensor.readPressure());
     payload["wetness"] = String(wetnessSensor.read());
-    payload["windSpeed"] = String(windSensor.readSpeed());
+    payload["windSpeed"] = String(windSensor.calculateSpeed());
     payload["windDirection"] = String(windSensor.readDirection());
     payload["lightIntensity"] = String(lightSensor.read());
     auto& gasReadings = gasSensor.read();
