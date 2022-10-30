@@ -2,14 +2,6 @@
 
 #include "sensors.hpp"
 
-/**
- * @param speedPin Will be used to calculate wind speed.
- * Is set to HIGH if the anemometer does a full rotation and passes a reed switch.
- * @param northPin Indicates with a HIGH that the wind direction is approximately North.
- * @param eastPin Indicates with a HIGH that the wind direction is approximately East.
- * @param southPin Indicates with a HIGH that the wind direction is approximately South.
- * @param westPin Indicates with a HIGH that the wind direction is approximately West.
- */
 WindSensor::WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint8_t southPin, uint8_t westPin) {
   speedPin_ = speedPin;
   northPin_ = northPin;
@@ -23,19 +15,12 @@ WindSensor::WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint
   pinMode(westPin_, INPUT);
 }
 
-/**
- * Read and return the current wind speed.
- * @returns Wind speed in m/s.
- */
-float WindSensor::readSpeed() {
-  LOG_LN(digitalRead(speedPin_));
-  return -1.0f;  // TODO
+float WindSensor::readSpeed() {  // TODO
+  float speed = digitalRead(speedPin_);
+  LOG_LN("Wind speed: " + String(speed) + " km/h");
+  return speed;
 }
 
-/**
- * Read and return the current wind direction.
- * @returns Wind direction
- */
 WindSensor::WindDirection WindSensor::readDirection() {
   if (digitalRead(northPin_)) {
     if (digitalRead(eastPin_)) {
@@ -62,5 +47,39 @@ WindSensor::WindDirection WindSensor::readDirection() {
     windDir_ = WindDirection::WEST;
   }
 
+  LOG_LN("Wind Direction: " + WindSensor::getString(windDir_));
   return windDir_;
+}
+
+String WindSensor::getString(WindSensor::WindDirection direction) {
+  switch (direction) {
+    case 0:
+      return "N";
+      break;
+    case 1:
+      return "NE";
+      break;
+    case 2:
+      return "E";
+      break;
+    case 3:
+      return "SE";
+      break;
+    case 4:
+      return "S";
+      break;
+    case 5:
+      return "SW";
+      break;
+    case 6:
+      return "W";
+      break;
+    case 7:
+      return "NW";
+      break;
+
+    default:
+      LOG_LN("Unknown wind direction.");
+      return "";
+  }
 }

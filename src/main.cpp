@@ -7,23 +7,27 @@
 #include "utils.hpp"
 
 // Interval in microseconds how often to read sensors and send data via MQTT.
-const unsigned int messageInterval = 10000;
+const unsigned int messageInterval = 4000;
 
 // Sensors
 GasSensor gasSensor(A0, D6);
-RainSensor rainSensor(A0, D7);
+WetnessSensor wetnessSensor(A0, D7);
 LightSensor lightSensor(D14, D15);
-// Use pin D9 for the wind speed sensor to have the onboard SCL LED light up when there is a HIGH signal on D9.
-WindSensor windSensor(D9, D6, D4, D3, D5);
-HumidityTemperatureSensor humidityTemperatureSensor(D13, DHT22);
-// Unfortunately, we have no functioning BMP280 at the moment.
-// PressureTemperatureSensor pressureTemperatureSensor(messageInterval);
+// Use pin D9 for the wind speed pin to have the onboard SCL LED light up when there is a HIGH signal on D9.
+WindSensor windSensor(D9, D10, D11, D12, D13);
+HumidityTemperatureSensor humidityTemperatureSensor(D8, DHT22);
+PressureTemperatureSensor pressureTemperatureSensor(messageInterval);
 
 void setup() {
   SETUP_SERIAL(9600);
   // Used to flash the internal LED when doing sensor readings.
-  // Remove this and the latter line when using pin D5 elsewhere or this will set LOW on D5.
+  // Beware that pin LED_BUILTIN is shorted with pin D5 when connecting something to that pin.
   pinMode(LED_BUILTIN, OUTPUT);
+
+  gasSensor.init();
+  lightSensor.init();
+  // Unfortunately, we do not have a working BMP pressure sensor.
+  // pressureTemperatureSensor.init();
 
   // connectToWifi();
   // connectToMQTT(messageInterval * 2);
@@ -42,8 +46,8 @@ void loop() {
     payload["temperature"] = String(humidityTemperatureSensor.readTemperature());
     payload["humidity"] = String(humidityTemperatureSensor.readHumidity());
     // payload["pressure"] = String(pressureTemperatureSensor.readPressure());
-    payload["rain"] = String(rainSensor.read());
-    // payload["windSpeed"] = String();
+    payload["wetness"] = String(wetnessSensor.read());
+    payload["windSpeed"] = String(windSensor.readSpeed());
     payload["windDirection"] = String(windSensor.readDirection());
     payload["lightIntensity"] = String(lightSensor.read());
     auto& gasReadings = gasSensor.read();

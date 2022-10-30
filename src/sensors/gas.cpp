@@ -10,34 +10,23 @@
 #define BOARD "ESP8266"
 #define SENSOR_TYPE "MQ-135"
 #define VOLTAGE_RESOLUTION 5
-#define ADC_BIT_RESOLUTION 10      // For arduino UNO/MEGA/NANO
+#define ADC_BIT_RESOLUTION 10      // For Arduino UNO/MEGA/NANO
 #define RATIO_MQ135_CLEAN_AIR 3.6  // RS / R0 = 3.6 ppm
 
-/**
- * @param pin The gas sensor's analog pin.
- * @param controlPin The gas sensor's digital write pin.
- * If set to HIGH, The gas sensor's readings will be written to the analog pin. (This will be handled internally.)
- * This is used because the Wemos D1 only has one analog pin available.
- */
 GasSensor::GasSensor(uint8_t pin, uint8_t controlPin)
     : mq_(BOARD, VOLTAGE_RESOLUTION, ADC_BIT_RESOLUTION, pin, SENSOR_TYPE) {
   controlPin_ = controlPin;
   pinMode(controlPin_, OUTPUT);
-  digitalWrite(controlPin_, HIGH);
+
   // Set math model to calculate the PPM concentration and the value of constants
   mq_.setRegressionMethod(1);  //_PPM =  a*ratio^b
   mq_.init();
-  /*
-    //If the RL value is different from 10K please assign your RL value with the following method:
-    _mq.setRL(10);
-  */
-  /*****************************  MQ CAlibration ********************************************/
-  // Explanation:
-  // In this routine the sensor will measure the resistance of the sensor supposedly before being pre-heated
-  // and on clean air (Calibration conditions), setting up R0 value.
-  // We recommend executing this routine only on setup in laboratory conditions.
-  // This routine does not need to be executed on each restart, you can load your R0 value from eeprom.
-  LOG("Air quality sensor calibrating. Please wait.");
+}
+
+void GasSensor::init() {
+  digitalWrite(controlPin_, HIGH);
+
+  LOG("Air quality sensor calibrating.");
   float calcR0 = 0;
 
   for (int i = 1; i <= 10; i++) {
@@ -56,7 +45,6 @@ GasSensor::GasSensor(uint8_t pin, uint8_t controlPin)
     blinkForever(1000);
   }
 
-  LOG_LN("Waiting for readings...");
   digitalWrite(controlPin_, LOW);
 }
 
@@ -75,8 +63,7 @@ float GasSensor::readEthanol() {
 float GasSensor::readCarbonDioxide() {
   mq_.setA(110.47);
   mq_.setB(-2.862);
-  // The sensor's readings are relative to the normal atmospheric CO2 content of ~400ppm.
-  return mq_.readSensor() + 400;
+  return mq_.readSensor() + 400;  // The CO2 reading is relative to the normal atmospheric CO2 content of around 400ppm.
 }
 
 float GasSensor::readToluene() {

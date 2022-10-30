@@ -1,17 +1,14 @@
 #include "sensors.hpp"
 #include "utils.hpp"
 
-#define BMP_I2C_ADDRESS 0x76
-
-/**
- * @param readRefreshInterval
- */
 PressureTemperatureSensor::PressureTemperatureSensor(unsigned long readRefreshInterval) {
   readRefreshInterval_ = readRefreshInterval;
+}
 
-  // TODO constructor will not do its thing when bmp is disconnect - why??
-  if (!bmp_.begin(BMP_I2C_ADDRESS)) {
-    LOG_LN(F("Could not initialize BMP280 pressure sensor! Check wiring or I2C address."));
+void PressureTemperatureSensor::init() {
+  if (!bmp_.begin(BMP280_ADDRESS_ALT)) {
+    LOG_LN(F("Unable to initialize BMP280 pressure sensor!"));
+    LOG_LN(F("Check wiring or I2C address, then restart your device."));
     blinkForever(1000);
   }
 
@@ -23,10 +20,6 @@ PressureTemperatureSensor::PressureTemperatureSensor(unsigned long readRefreshIn
                    Adafruit_BMP280::STANDBY_MS_500);  // Standby time
 }
 
-/**
- * Read and return the barometric pressure.
- * @return Barometric pressure in hPa.
- */
 float PressureTemperatureSensor::readPressure() {
   // Take a new measurement only when a new message shall be sent.
   // Otherwise, use measurements from previous reading.
@@ -39,10 +32,6 @@ float PressureTemperatureSensor::readPressure() {
   return hPa;
 }
 
-/**
- * Read and return the temperature.
- * @return Temperature in °C.
- */
 float PressureTemperatureSensor::readTemperature() {
   // Take a new measurement only when a new message shall be sent.
   // Otherwise, use measurements from previous reading.

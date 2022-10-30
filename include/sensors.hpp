@@ -14,8 +14,22 @@ class HumidityTemperatureSensor {
   DHT dht_;
 
  public:
+  /**
+   * @param pin The sensor's digital read/write pin.
+   * @param dhtType The type of the DHT. Possible values are: "DHT11", "DHT12", "DHT21" "DHT22"
+   */
   HumidityTemperatureSensor(uint8_t pin, uint8_t dhtType);
+
+  /**
+   * Read and return temperature.
+   * @return Temperature in °C.
+   */
   float readTemperature();
+
+  /**
+   * Read and return relative humidity.
+   * @return Relative humidity in percent (1-100%).
+   */
   float readHumidity();
 };
 
@@ -23,9 +37,24 @@ class HumidityTemperatureSensor {
 class LightSensor {
  private:
   BH1750 bh_;
+  uint8_t sdaPin_, sclPin_;
 
  public:
+  /**
+   * @param sdaPin The light sensor's SDA pin.
+   * @param sclPin The light sensor's SCL pin.
+   */
   LightSensor(uint8_t sdaPin, uint8_t sclPin);
+
+  /**
+   *
+   */
+  void init();
+
+  /**
+   * Read and return ambient light intensity.
+   * @return Light intensity in lux (lx).
+   */
   float read();
 };
 
@@ -37,22 +66,46 @@ class PressureTemperatureSensor {
   unsigned long readRefreshInterval_;
 
  public:
-  PressureTemperatureSensor(unsigned long messageInterval);
-  float readTemperature();
+  /**
+   * @param readRefreshInterval
+   */
+  PressureTemperatureSensor(unsigned long readRefreshInterval);
+  void init();
+
+  /**
+   * Read and return the barometric pressure.
+   * @return Barometric pressure in hPa.
+   */
   float readPressure();
+
+  /**
+   * Read and return the temperature.
+   * @return Temperature in °C.
+   */
+  float readTemperature();
 };
 
-class RainSensor {
+class WetnessSensor {
  private:
-  uint8_t pin_;
-  uint8_t controlPin_;
+  uint8_t pin_, controlPin_;
 
  public:
-  RainSensor(uint8_t pin, uint8_t controlPin);
-  int read();
+  /**
+   * @param pin The wetness sensor's analog read pin.
+   * @param controlPin The wetness sensor's digital write pin.
+   * If set to HIGH, The wetness sensor's readings will be written to the analog pin. (This will be handled internally.)
+   * This is used because the Wemos D1 only has one analog pin available.
+   */
+  WetnessSensor(uint8_t pin, uint8_t controlPin);
+
+  /**
+   * Read and return the sensor's wetness.
+   * @return Wetness from 0 (dry) to 1 (wet). Note: The sensor isn't very accurate and ranges between 0.09 and 0.7.
+   */
+  float read();
 };
 
-// Represents the MQ-135 air quality sensor.
+// Represents the MQ-135 gas sensor.
 class GasSensor {
  private:
   MQUnifiedsensor mq_;
@@ -67,8 +120,29 @@ class GasSensor {
   };
 
  public:
+  /**
+   * @param pin The gas sensor's analog pin.
+   * @param controlPin The gas sensor's digital write pin.
+   * If set to HIGH, The gas sensor's readings will be written to the analog pin. (This will be handled internally.)
+   * This is used because the Wemos D1 only has one analog pin available.
+   */
   GasSensor(uint8_t pin, uint8_t controlPin);
+
+  /**
+   * MQ Calibration
+   *
+   * In this routine the sensor will measure the resistance of the sensor supposedly before being pre-heated
+   * and on clean air (Calibration conditions), setting up R0 value.
+   * We recommend executing this routine only on setup in laboratory conditions.
+   * This routine does not need to be executed on each restart, you can load your R0 value from eeprom.
+   */
+  void init();
+
+  /**
+   * @return
+   */
   const std::map<String, float>& read();
+
   float readAcetone();
   float readAmmonium();
   float readCarbonDioxide();
@@ -83,15 +157,34 @@ class WindSensor {
   enum WindDirection { NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST };
 
  private:
-  uint8_t speedPin_;
-  uint8_t northPin_;
-  uint8_t eastPin_;
-  uint8_t southPin_;
-  uint8_t westPin_;
+  uint8_t speedPin_, northPin_, eastPin_, southPin_, westPin_;
   WindDirection windDir_;
 
  public:
+  /**
+   * @param speedPin Will be used to calculate wind speed.
+   * Is set to HIGH if the anemometer does a full rotation and passes a reed switch.
+   * @param northPin Indicates with a HIGH that the wind direction is approximately North.
+   * @param eastPin Indicates with a HIGH that the wind direction is approximately East.
+   * @param southPin Indicates with a HIGH that the wind direction is approximately South.
+   * @param westPin Indicates with a HIGH that the wind direction is approximately West.
+   */
   WindSensor(uint8_t speedPin, uint8_t northPin, uint8_t eastPin, uint8_t southPin, uint8_t westPin);
+
+  /**
+   * Read and return the current wind direction.
+   * @returns The wind direction as celestial direction.
+   */
   WindDirection readDirection();
+
+  /**
+   * Read and return the current wind speed.
+   * @returns Wind speed in m/s.
+   */
   float readSpeed();
+
+  /**
+   *
+   */
+  String getString(WindSensor::WindDirection direction);
 };
