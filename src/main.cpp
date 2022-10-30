@@ -51,12 +51,12 @@ void loop() {
     payload["windDirection"] = String(windSensor.readDirection());
     payload["lightIntensity"] = String(lightSensor.read());
     auto& gasReadings = gasSensor.read();
-    payload["airQuality"]["acetone"] = gasReadings.at("C3H6O");
-    payload["airQuality"]["ammonium"] = gasReadings.at("NH4");
-    payload["airQuality"]["carbonDioxide"] = gasReadings.at("CO2");
-    payload["airQuality"]["carbonMonoxide"] = gasReadings.at("CO");
-    payload["airQuality"]["ethanol"] = gasReadings.at("C2H6O");
-    payload["airQuality"]["toluene"] = gasReadings.at("C7H8");
+    payload["gas"]["acetone"] = gasReadings.at("C3H6O");
+    payload["gas"]["ammonium"] = gasReadings.at("NH4");
+    payload["gas"]["carbonDioxide"] = gasReadings.at("CO2");
+    payload["gas"]["carbonMonoxide"] = gasReadings.at("CO");
+    payload["gas"]["ethanol"] = gasReadings.at("C2H6O");
+    payload["gas"]["toluene"] = gasReadings.at("C7H8");
 
     // sendMQTTMessage("weather", payload);
 
