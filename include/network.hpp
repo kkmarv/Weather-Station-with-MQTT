@@ -17,11 +17,13 @@ void connectToWiFi();
  * Blocks the program as long as a connection is being established.
  */
 void connectToMQTT(unsigned long keepAliveInterval);
+
 /**
  * Send a message to a specific MQTT topic.
  */
 void sendMQTTMessage(const String& topic, const String& payload, short qos = 0);
+
 /**
  * Send a message to a specific MQTT topic.
  */
-void sendMQTTMessage(const String& topic, StaticJsonDocument<200>& jsonDoc, short qos = 0);
+void sendMQTTMessage(const String& topic, StaticJsonDocument<300>& jsonDoc, short qos = 0);

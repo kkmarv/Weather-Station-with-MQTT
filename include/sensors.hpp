@@ -159,7 +159,7 @@ class WindSensor {
  private:
   uint8_t speedPin_, northPin_, eastPin_, southPin_, westPin_;
   int anemometerRadius_;             // in mm from middle to magnet
-  int anemometerRotationCount_ = 0;  // number of full rotations until the last call to calculateSpeed()
+  int anemometerRotationCount_ = 0;  // number of full rotations since the last call to calculateSpeed()
   WindDirection windDir_ = NORTH;    // the last wind direction that has been read from the sensor
   bool lastAnemometerSignal_ = false;
   unsigned long calculationInterval_;
@@ -199,7 +199,7 @@ class WindSensor {
 
   /**
    * Reads the windSpeed pin and checks if the anemometer did a full rotation yet,
-   * then updates the internal WindSensor state.
+   * then updates the internal WindSensor state. 
    */
   void checkOnFullRotation();
 

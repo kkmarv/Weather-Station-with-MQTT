@@ -35,7 +35,7 @@ void GasSensor::init() {
     LOG(".");
   }
   mq_.setR0(calcR0 / 10);
-  LOG("  done!.");
+  LOG_LN("  done!.");
 
   if (isinf(calcR0)) {
     LOG_LN("Warning: Connection issue. R0 is infinite (Open circuit detected) please check your wiring and supply");
@@ -88,19 +88,19 @@ const std::map<String, float>& GasSensor::read() {
   digitalWrite(controlPin_, HIGH);
   mq_.update();
 
+  readings_["C3H6O"] = readAcetone();
+  readings_["NH4"] = readAmmonium();
+  readings_["CO2"] = readCarbonDioxide();
   readings_["CO"] = readCarbonMonoxide();
   readings_["C2H6O"] = readEthanol();
-  readings_["CO2"] = readCarbonDioxide();
   readings_["C7H8"] = readToluene();
-  readings_["NH4"] = readAmmonium();
-  readings_["C3H6O"] = readAcetone();
 
   digitalWrite(controlPin_, LOW);
 
   LOG_LN("Acetone: " + String(readings_["C3H60"]) + " ppm");
   LOG_LN("Ammonium: " + String(readings_["NH4"]) + " ppm");
-  LOG_LN("Carbonmonoxide: " + String(readings_["CO"]) + " ppm");
-  LOG_LN("Carbondioxide: " + String(readings_["CO2"]) + " ppm");
+  LOG_LN("Carbon Dioxide: " + String(readings_["CO2"]) + " ppm");
+  LOG_LN("Carbon Monoxide: " + String(readings_["CO"]) + " ppm");
   LOG_LN("Ethanol: " + String(readings_["C2H60"]) + " ppm");
   LOG_LN("Toluene: " + String(readings_["C7H8"]) + " ppm");
 

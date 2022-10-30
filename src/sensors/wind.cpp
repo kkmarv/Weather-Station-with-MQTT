@@ -24,9 +24,11 @@ WindSensor::WindSensor(int anemometerRadius,
 }
 
 float WindSensor::calculateSpeed() {
-  float speed = anemometerRotationCount_ * TWO_PI * anemometerRadius_ / calculationInterval_;  // in mm/ms
-  speed = (speed / 1000) * 3.6;                                                                // in km/h
-  LOG_LN("Wind speed: " + String(speed) + " km/h");
+  // Wind speed in km/h
+  // Please note that the anemometer's build-in reed switch toggles two times when a magnet moves over it.
+  // This is considered by dividing anemometerRotationCount_ by 2.
+  float speed = 3.6 * ((anemometerRotationCount_ / 2) * TWO_PI * anemometerRadius_) / calculationInterval_;
+  LOG_LN("Wind Speed: " + String(speed) + " km/h");
   anemometerRotationCount_ = 0;
   return speed;
 }
