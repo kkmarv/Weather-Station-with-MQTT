@@ -58,7 +58,7 @@ void loop() {
     payload["gas"]["ethanol"] = gasReadings.at("C2H6O");
     payload["gas"]["toluene"] = gasReadings.at("C7H8");
 
-    // sendMQTTMessage("weather", payload);
+    sendMQTTMessage("weather", payload);
 
     digitalWrite(LED_BUILTIN, HIGH);
     LOG_LN();
