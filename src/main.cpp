@@ -7,7 +7,7 @@
 #include "utils.hpp"
 
 // Interval in milliseconds how often to read sensors and send data via MQTT.
-const unsigned int messageInterval = 4000;
+const unsigned int messageInterval = 20000;
 
 // Sensors
 GasSensor gasSensor(A0, D6);
