@@ -63,7 +63,7 @@ float GasSensor::readEthanol() {
 float GasSensor::readCarbonDioxide() {
   mq_.setA(110.47);
   mq_.setB(-2.862);
-  return mq_.readSensor() + 400;  // The CO2 reading is relative to the normal atmospheric CO2 content of around 400ppm.
+  return mq_.readSensor();
 }
 
 float GasSensor::readToluene() {
